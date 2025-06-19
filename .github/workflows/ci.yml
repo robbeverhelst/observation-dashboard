@@ -40,7 +40,7 @@ jobs:
 
   release:
     name: Release
-    runs-on:  arc-runner-set-observation-explorer
+    runs-on: arc-runner-set-observation-explorer
     needs: test
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     outputs:
