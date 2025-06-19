@@ -1,4 +1,4 @@
-# Observation Dashboard
+# Observation Explorer
 
 A real-time biodiversity data dashboard built with Next.js and the observation-js API, showcasing live data from the Observation International platform.
 
@@ -32,8 +32,8 @@ A real-time biodiversity data dashboard built with Next.js and the observation-j
 
 ```bash
 # Clone the repository
-git clone https://github.com/robbeverhelst/observation-dashboard.git
-cd observation-dashboard
+git clone https://github.com/robbeverhelst/observation-explorer.git
+cd observation-explorer
 
 # Install dependencies
 bun install
@@ -154,8 +154,8 @@ The project includes a comprehensive CI/CD pipeline using GitHub Actions:
 
 Images are automatically built and pushed to:
 
-- `ghcr.io/robbeverhelst/observation-dashboard:latest`
-- `ghcr.io/robbeverhelst/observation-dashboard:v1.2.3` (tagged versions)
+- `ghcr.io/robbeverhelst/observation-explorer:latest`
+- `ghcr.io/robbeverhelst/observation-explorer:v1.2.3` (tagged versions)
 
 ### Deployment
 
@@ -163,7 +163,7 @@ Use the included deployment script for production deployments:
 
 ```bash
 # Deploy specific version
-IMAGE_NAME=ghcr.io/robbeverhelst/observation-dashboard:v1.2.3 ./scripts/deploy.sh
+IMAGE_NAME=ghcr.io/robbeverhelst/observation-explorer:v1.2.3 ./scripts/deploy.sh
 
 # Deploy latest
 ./scripts/deploy.sh

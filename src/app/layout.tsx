@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Observation Dashboard - observation-js API Explorer',
+  title: 'Observation Explorer - observation-js API Explorer',
   description:
     'Explore the power of observation-js API with public endpoints for biodiversity data, challenges, and geographic information.',
 };

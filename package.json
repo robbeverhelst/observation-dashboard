@@ -1,5 +1,5 @@
 {
-  "name": "observation-dashboard",
+  "name": "observation-explorer",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
     "format:check": "prettier --check .",
     "clean": "rm -rf .next node_modules/.cache .turbo",
     "ci": "bun run format && bun run lint && bun run build",
-    "docker:build": "docker build -t observation-dashboard .",
-    "docker:run": "docker run -p 3000:3000 observation-dashboard",
+    "docker:build": "docker build -t observation-explorer .",
+    "docker:run": "docker run -p 3000:3000 observation-explorer",
     "docker:dev": "docker-compose --profile dev up --build",
     "docker:prod": "docker-compose up --build",
     "docker:stop": "docker-compose down",
