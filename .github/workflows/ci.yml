@@ -13,7 +13,7 @@ env:
 jobs:
   test:
     name: Test
-    runs-on: arc-runner-set-observation-dashboard
+    runs-on: arc-runner-set-observation-explorer
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
 
   release:
     name: Release
-    runs-on: ubuntu-latest
+    runs-on:  arc-runner-set-observation-explorer
     needs: test
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     outputs:
