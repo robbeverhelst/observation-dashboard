@@ -10,7 +10,24 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "rm -rf .next node_modules/.cache .turbo",
-    "ci": "bun run format && bun run lint && bun run build"
+    "ci": "bun run format && bun run lint && bun run build",
+    "docker:build": "docker build -t observation-dashboard .",
+    "docker:run": "docker run -p 3000:3000 observation-dashboard",
+    "docker:dev": "docker-compose --profile dev up --build",
+    "docker:prod": "docker-compose up --build",
+    "docker:stop": "docker-compose down",
+    "docker:clean": "docker-compose down -v --rmi all --remove-orphans",
+    "test:docker": "docker-compose up --build --abort-on-container-exit",
+    "test:build": "bun run build && echo 'Build test passed!'",
+    "test:lint": "bun run lint && echo 'Lint test passed!'",
+    "test:format": "bun run format:check && echo 'Format test passed!'",
+    "test:all": "bun run test:format && bun run test:lint && bun run test:build",
+    "health-check": "curl -f http://localhost:3000 || exit 1",
+    "release": "semantic-release",
+    "release:dry": "semantic-release --dry-run",
+    "deploy:prod": "docker-compose -f docker-compose.prod.yml up -d",
+    "deploy:stop": "docker-compose -f docker-compose.prod.yml down",
+    "deploy:logs": "docker-compose -f docker-compose.prod.yml logs -f"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
@@ -27,6 +44,9 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^10.0.7",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24",
     "@types/react": "^19",
@@ -34,6 +54,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "prettier": "^3.4.2",
+    "semantic-release": "^23.0.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"

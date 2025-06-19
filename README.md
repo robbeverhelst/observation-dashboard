@@ -46,6 +46,8 @@ Open [http://localhost:3001](http://localhost:3001) to view the dashboard.
 
 ## 📋 Available Scripts
 
+### Development
+
 ```bash
 bun run dev          # Start development server
 bun run build        # Build for production
@@ -54,6 +56,38 @@ bun run lint         # Run ESLint
 bun run format       # Format code with Prettier
 bun run format:check # Check code formatting
 bun run ci           # Run full CI pipeline (format + lint + build)
+```
+
+### Docker
+
+```bash
+bun run docker:build    # Build production Docker image
+bun run docker:run      # Run production container
+bun run docker:prod     # Start production with docker-compose
+bun run docker:dev      # Start development with docker-compose (port 3001)
+bun run docker:stop     # Stop all containers
+bun run docker:clean    # Complete cleanup
+```
+
+### Testing
+
+```bash
+bun run test:all        # Run all tests (format, lint, build)
+bun run test:build      # Test Next.js build
+bun run test:lint       # Test ESLint
+bun run test:format     # Test Prettier formatting
+bun run test:docker     # Test Docker build and run
+bun run health-check    # Test if app is responding
+```
+
+### Release & Deployment
+
+```bash
+bun run release         # Create semantic release
+bun run release:dry     # Dry run semantic release
+bun run deploy:prod     # Deploy using production image
+bun run deploy:stop     # Stop production deployment
+bun run deploy:logs     # View deployment logs
 ```
 
 ## 🏗️ Project Structure
@@ -98,6 +132,42 @@ Built with [shadcn/ui](https://ui.shadcn.com/) components:
 - Badges for status indicators
 - Dialog modal for detail views
 - Responsive grid layouts
+
+## 🚀 CI/CD Pipeline
+
+The project includes a comprehensive CI/CD pipeline using GitHub Actions:
+
+### Workflow Steps
+
+1. **Test**: Runs formatting, linting, and build tests
+2. **Release**: Uses semantic-release for automated versioning
+3. **Build & Push**: Builds and pushes Docker images to GitHub Container Registry
+
+### Semantic Versioning
+
+- **feat:** - New features (minor version bump)
+- **fix:** - Bug fixes (patch version bump)
+- **BREAKING CHANGE:** - Breaking changes (major version bump)
+- **chore:** - Maintenance tasks (no version bump)
+
+### Docker Images
+
+Images are automatically built and pushed to:
+
+- `ghcr.io/robbeverhelst/observation-dashboard:latest`
+- `ghcr.io/robbeverhelst/observation-dashboard:v1.2.3` (tagged versions)
+
+### Deployment
+
+Use the included deployment script for production deployments:
+
+```bash
+# Deploy specific version
+IMAGE_NAME=ghcr.io/robbeverhelst/observation-dashboard:v1.2.3 ./scripts/deploy.sh
+
+# Deploy latest
+./scripts/deploy.sh
+```
 
 ## 🤝 Contributing
 
