@@ -7,6 +7,7 @@ import {
   getObservationsForSpecies,
   getObservationsForUser,
 } from '@/lib/observation-api';
+import { withCache } from '@/lib/redis';
 import type { ObservationSearchParams, MapBounds } from '@/types/observations';
 
 export async function GET(request: Request) {
@@ -38,7 +39,11 @@ export async function GET(request: Request) {
             { status: 400 }
           );
         }
-        const observation = await getObservation(parseInt(id));
+        const observation = await withCache(
+          `observation:${id}`,
+          () => getObservation(parseInt(id)),
+          { ttl: 600, prefix: 'api' } // Cache for 10 minutes
+        );
         if (!observation) {
           return NextResponse.json(
             { error: 'Observation not found' },
@@ -116,7 +121,16 @@ export async function GET(request: Request) {
       case 'search':
       default:
         console.log('🔍 Calling searchObservations with params:', params);
-        const searchResult = await searchObservations(params);
+
+        // Create cache key based on search parameters
+        const searchKey = `search:${JSON.stringify(params)}`;
+
+        const searchResult = await withCache(
+          searchKey,
+          () => searchObservations(params),
+          { ttl: 300, prefix: 'obs' } // Cache for 5 minutes
+        );
+
         console.log('🔍 searchObservations result:', searchResult);
         return NextResponse.json(searchResult);
     }

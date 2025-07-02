@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/lib/observation-client';
+import { withCache } from '@/lib/redis';
 
 export async function GET(request: Request) {
   try {
@@ -11,8 +12,7 @@ export async function GET(request: Request) {
     const sort = searchParams.get('sort');
 
     if (speciesId && speciesId !== 'undefined') {
-      // Get specific species by ID
-      const speciesClient = await client.species();
+      // Get specific species by ID with caching
       const speciesIdNum = parseInt(speciesId);
       if (isNaN(speciesIdNum)) {
         return NextResponse.json(
@@ -20,7 +20,16 @@ export async function GET(request: Request) {
           { status: 400 }
         );
       }
-      const species = await speciesClient.get(speciesIdNum);
+
+      const species = await withCache(
+        `species:${speciesIdNum}`,
+        async () => {
+          const speciesClient = await client.species();
+          return await speciesClient.get(speciesIdNum);
+        },
+        { ttl: 1800, prefix: 'api' } // Cache for 30 minutes
+      );
+
       return NextResponse.json(species);
     }
 
