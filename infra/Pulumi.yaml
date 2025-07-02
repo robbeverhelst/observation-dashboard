@@ -1,0 +1,11 @@
+name: observation-explorer-infra
+runtime:
+  name: nodejs
+  options:
+    packagemanager: auto
+main: bin/index.js
+description: Observation Explorer Kubernetes Infrastructure
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: kubernetes-typescript

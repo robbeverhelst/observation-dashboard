@@ -9,7 +9,8 @@
       "Bash(grep:*)",
       "Bash(rm:*)",
       "Bash(mkdir:*)",
-      "Bash(bun add:*)"
+      "Bash(bun add:*)",
+      "Bash(bun ci:*)"
     ],
     "deny": []
   }

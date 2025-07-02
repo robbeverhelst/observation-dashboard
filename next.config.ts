@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       // Don't include ioredis on the client side
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        'ioredis': false,
+        ioredis: false,
       };
     }
     return config;
