@@ -16,7 +16,7 @@ function transformObservation(obs: Observation): ObservationPoint {
   const longitude = obs.point?.coordinates?.[0] || 0;
 
   // Type assertion to access extended fields
-  const extendedObs = obs as ObservationPoint;
+  const extendedObs = obs as unknown as ObservationPoint;
 
   return {
     ...obs,
@@ -24,8 +24,18 @@ function transformObservation(obs: Observation): ObservationPoint {
       extendedObs.location_detail?.name ||
       obs.location?.name ||
       `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-    rarity: calculateRarity(obs),
-  };
+    // Don't override the rarity if it's already provided by the API
+    rarity: extendedObs.rarity || calculateRarity(obs),
+    // Transform photos from Photo[] to string[]
+    photos: Array.isArray(obs.photos)
+      ? obs.photos.map((photo: unknown) =>
+          typeof photo === 'string'
+            ? photo
+            : (photo as { url?: string; src?: string }).url ||
+              (photo as { url?: string; src?: string }).src
+        )
+      : undefined,
+  } as unknown as ObservationPoint;
 }
 
 /**

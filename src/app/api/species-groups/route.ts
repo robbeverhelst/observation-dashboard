@@ -3,6 +3,11 @@ import { client } from '@/lib/observation-client';
 
 export async function GET(request: Request) {
   try {
+    // During build time, return empty results
+    if (process.env.NODE_ENV === 'production' && !process.env.OAUTH_CLIENT_ID) {
+      return NextResponse.json({ results: [] });
+    }
+
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type') || 'groups';
 
@@ -22,7 +27,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Error fetching species data:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch species data' },
+      { error: 'Failed to fetch species data', results: [] },
       { status: 500 }
     );
   }

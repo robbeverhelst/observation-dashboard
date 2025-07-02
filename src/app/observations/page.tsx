@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { MapComponent } from '@/components/MapComponent';
+import { useRouter } from 'next/navigation';
 import {
   Table,
   TableBody,
@@ -53,6 +54,7 @@ type ViewMode = 'map' | 'table';
 
 export default function ObservationsPage() {
   console.log('🚀 ObservationsPage component mounted');
+  const router = useRouter();
 
   const [observations, setObservations] = useState<ObservationPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -167,6 +169,10 @@ export default function ObservationsPage() {
     setTimeout(() => setSwitching(false), 100);
   };
 
+  const handleViewDetails = (observation: ObservationPoint) => {
+    router.push(`/observations/${observation.id}`);
+  };
+
   // Don't show full-page loading, we'll show overlay instead
 
   if (error) {
@@ -276,6 +282,10 @@ export default function ObservationsPage() {
             }))}
             height="calc(100vh - 300px)"
             onBoundsChange={handleBoundsChange}
+            onObservationClick={(obsId) => {
+              const obs = observations.find((o) => o.id?.toString() === obsId);
+              if (obs) handleViewDetails(obs);
+            }}
           />
         ) : (
           <Card>
@@ -363,7 +373,11 @@ export default function ObservationsPage() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Button variant="ghost" size="sm">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleViewDetails(obs)}
+                            >
                               View Details
                             </Button>
                           </TableCell>

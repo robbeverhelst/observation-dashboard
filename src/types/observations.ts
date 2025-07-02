@@ -2,16 +2,30 @@
 import type { Observation, Paginated, SpeciesData } from 'observation-js';
 
 // Extend observation-js types for our UI needs
-export interface ObservationPoint extends Observation {
+export interface ObservationPoint
+  extends Omit<Observation, 'photos' | 'sounds' | 'validation_status'> {
   // Add any additional fields we need for UI
   displayLocation?: string;
   rarity?: 'common' | 'moderate' | 'rare' | 'very_rare';
   cluster_id?: string;
   // Ensure these detail fields are accessible
   species_detail?: SpeciesData;
-  user_detail?: { id: number; name: string };
+  user_detail?: { id: number; name: string; avatar?: string | null };
   species_group?: number;
-  location_detail?: { id: number; name: string };
+  location_detail?: {
+    id: number;
+    name: string;
+    country_code?: string;
+    permalink?: string;
+  };
+  // Override media arrays to be string URLs
+  photos?: string[];
+  sounds?: string[];
+  permalink?: string;
+  validation_status?: string;
+  modified?: string;
+  number?: number;
+  notes?: string;
 }
 
 // Create our own search params since observation-js doesn't export theirs
@@ -98,6 +112,19 @@ export const QUALITY_COLORS: Record<string, string> = {
 };
 
 // Extended SpeciesData with observation count for UI
-export interface SpeciesDataWithCount extends SpeciesData {
+export interface SpeciesDataWithCount {
+  // Base SpeciesData fields
+  id: number;
+  name: string;
+  name_scientific?: string;
+  name_english?: string;
+  name_dutch?: string;
+  name_french?: string;
+  name_german?: string;
+  group?: number;
+  group_name?: string;
+  // Additional fields for UI
   observation_count?: number;
+  // Species photo URL (singular, not plural like in docs)
+  photo?: string;
 }

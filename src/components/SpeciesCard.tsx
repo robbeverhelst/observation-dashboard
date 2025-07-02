@@ -67,9 +67,9 @@ export function SpeciesCard({
             <CardTitle className="text-base line-clamp-2 group-hover:text-primary transition-colors">
               {species.name}
             </CardTitle>
-            {species.scientific_name && (
+            {species.name_scientific && (
               <CardDescription className="text-xs italic line-clamp-1 mt-1">
-                {species.scientific_name}
+                {species.name_scientific}
               </CardDescription>
             )}
           </div>
@@ -82,11 +82,11 @@ export function SpeciesCard({
       </CardHeader>
 
       <CardContent className="pt-0 space-y-3">
-        {/* Species Image Placeholder */}
+        {/* Species Image */}
         <div className="aspect-video rounded-md bg-muted flex items-center justify-center overflow-hidden">
-          {!imageError && species.id ? (
+          {species.photo && !imageError ? (
             <img
-              src={`https://waarneming.nl/media/photo/species/${species.id}/1.jpg`}
+              src={species.photo}
               alt={species.name}
               className="w-full h-full object-cover"
               onError={handleImageError}
@@ -94,7 +94,10 @@ export function SpeciesCard({
           ) : (
             <div className="text-muted-foreground text-center p-4">
               <Eye className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs">No image available</p>
+              <p className="text-xs">
+                {species.photo ? 'Image failed to load' : 'No image available'}
+              </p>
+              <p className="text-xs opacity-70">ID: {species.id}</p>
             </div>
           )}
         </div>

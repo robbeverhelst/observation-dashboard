@@ -47,6 +47,7 @@ interface MapComponentProps {
     center: { lat: number; lng: number };
     zoom: number;
   }) => void;
+  onObservationClick?: (observationId: string) => void;
 }
 
 export function MapComponent({
@@ -54,11 +55,23 @@ export function MapComponent({
   height = '400px',
   showControls = true,
   onBoundsChange,
+  onObservationClick,
 }: MapComponentProps) {
-  const [viewState, setViewState] = useState({
-    longitude: 5.2913, // Center of Netherlands
-    latitude: 52.1326,
-    zoom: 7,
+  const [viewState, setViewState] = useState(() => {
+    // If we have a single observation, center on it
+    if (observations.length === 1) {
+      return {
+        longitude: observations[0].longitude,
+        latitude: observations[0].latitude,
+        zoom: 15, // High zoom for single observation
+      };
+    }
+    // Default to Netherlands center
+    return {
+      longitude: 5.2913,
+      latitude: 52.1326,
+      zoom: 7,
+    };
   });
   const [selectedObservation, setSelectedObservation] =
     useState<ObservationPoint | null>(null);
@@ -364,6 +377,12 @@ export function MapComponent({
                       size="sm"
                       variant="outline"
                       className="w-full text-xs"
+                      onClick={() => {
+                        if (onObservationClick) {
+                          onObservationClick(selectedObservation.id);
+                          setSelectedObservation(null);
+                        }
+                      }}
                     >
                       View Details
                     </Button>

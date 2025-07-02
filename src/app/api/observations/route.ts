@@ -39,7 +39,13 @@ export async function GET(request: Request) {
           );
         }
         const observation = await getObservation(parseInt(id));
-        return NextResponse.json({ observation });
+        if (!observation) {
+          return NextResponse.json(
+            { error: 'Observation not found' },
+            { status: 404 }
+          );
+        }
+        return NextResponse.json(observation);
 
       case 'species':
         if (!params.species_id) {
