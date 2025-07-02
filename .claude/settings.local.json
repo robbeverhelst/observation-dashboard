@@ -1,6 +1,14 @@
 {
   "permissions": {
-    "allow": ["Bash(bun run:*)", "WebFetch(domain:robbeverhelst.github.io)"],
+    "allow": [
+      "Bash(bun run:*)",
+      "WebFetch(domain:robbeverhelst.github.io)",
+      "Bash(bun exec tsc:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:waarneming.nl)",
+      "Bash(grep:*)",
+      "Bash(rm:*)"
+    ],
     "deny": []
   }
 }

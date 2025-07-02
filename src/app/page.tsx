@@ -19,22 +19,22 @@ import { Globe, Eye, Leaf, MapPin, TrendingUp, Award } from 'lucide-react';
 import type {
   Challenge,
   Country,
-  Species,
   Region,
   RegionSpeciesList as SpeciesList,
 } from 'observation-js';
+import type { SpeciesDataWithCount as SpeciesData } from '@/types/observations';
 
 export default function Home() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [speciesLists, setSpeciesLists] = useState<SpeciesList[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
-  const [species, setSpecies] = useState<Species[]>([]);
+  const [species, setSpecies] = useState<SpeciesData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Modal state
-  type DataItem = Challenge | Country | Species | SpeciesList | Region;
+  type DataItem = Challenge | Country | SpeciesData | SpeciesList | Region;
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
   const [modalType, setModalType] = useState<
     'challenge' | 'country' | 'species' | 'list' | 'region'
@@ -417,8 +417,7 @@ export default function Home() {
                         {s.group_name || 'Unknown Group'}
                       </span>
                       <Badge variant="outline">
-                        {(s as unknown as { observation_count?: number })
-                          .observation_count || 0}
+                        {s.observation_count || 0}
                       </Badge>
                     </div>
                   ))}

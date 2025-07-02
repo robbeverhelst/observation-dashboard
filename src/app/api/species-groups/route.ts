@@ -8,12 +8,14 @@ export async function GET(request: Request) {
 
     if (type === 'groups') {
       // Get species groups/categories
-      const response = await client.species.listGroups();
+      const species = await client.species();
+      const response = await species.listGroups();
       const results = 'results' in response ? response.results : response;
       return NextResponse.json({ results });
     } else {
       // Get regional species lists (existing functionality)
-      const response = await client.regionSpeciesLists.list();
+      const regionSpeciesLists = await client.regionSpeciesLists();
+      const response = await regionSpeciesLists.list();
       const results = Array.isArray(response) ? response : [];
       return NextResponse.json({ results });
     }

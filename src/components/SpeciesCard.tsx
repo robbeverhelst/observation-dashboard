@@ -11,12 +11,12 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Eye, MapPin, Info } from 'lucide-react';
-import type { Species } from 'observation-js';
+import type { SpeciesDataWithCount as SpeciesData } from '@/types/observations';
 
 interface SpeciesCardProps {
-  species: Species;
-  onViewDetails: (species: Species) => void;
-  onViewObservations?: (species: Species) => void;
+  species: SpeciesData;
+  onViewDetails: (species: SpeciesData) => void;
+  onViewObservations?: (species: SpeciesData) => void;
   showObservationCount?: boolean;
 }
 

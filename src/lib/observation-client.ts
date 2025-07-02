@@ -1,15 +1,45 @@
 import { ObservationClient } from 'observation-js';
 
-// Create authenticated client instance
-export const createAuthenticatedClient = () => {
-  const client = new ObservationClient();
+export async function getClient() {
+  const client = new ObservationClient({
+    platform: 'nl',
+    test: false,
+  });
 
-  // TODO: Configure OAuth authentication when the API is properly documented
-  // For now, we'll use the client without explicit auth configuration
-  // The API may use the credentials in the background
+  await client.getAccessTokenWithPassword({
+    clientId: process.env.OAUTH_CLIENT_ID!,
+    clientSecret: process.env.OAUTH_CLIENT_SECRET!,
+    email: process.env.OAUTH_USERNAME!,
+    password: process.env.OAUTH_PASSWORD!,
+  });
 
   return client;
-};
+}
 
-// Export default client instance
-export const client = createAuthenticatedClient();
+// Export a lazy client getter for other API routes
+export const client = {
+  async challenges() {
+    const c = await getClient();
+    return c.challenges;
+  },
+  async species() {
+    const c = await getClient();
+    return c.species;
+  },
+  async countries() {
+    const c = await getClient();
+    return c.countries;
+  },
+  async regions() {
+    const c = await getClient();
+    return c.regions;
+  },
+  async groups() {
+    const c = await getClient();
+    return c.groups;
+  },
+  async regionSpeciesLists() {
+    const c = await getClient();
+    return c.regionSpeciesLists;
+  },
+};

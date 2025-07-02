@@ -3,7 +3,8 @@ import { client } from '@/lib/observation-client';
 
 export async function GET() {
   try {
-    const response = await client.regions.list();
+    const regions = await client.regions();
+    const response = await regions.list();
 
     // response is Region[], wrap in results format for consistency
     return NextResponse.json({ results: response });

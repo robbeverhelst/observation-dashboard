@@ -262,6 +262,7 @@ This document defines the layout structure for all pages in the Observation Expl
 ## **🔐 Authentication Pages**
 
 ### **Login Page**
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │ SIDEBAR                        MAIN CONTENT AREA                │
@@ -300,6 +301,7 @@ This document defines the layout structure for all pages in the Observation Expl
 ## **📱 Mobile Layout Considerations**
 
 ### **Mobile Navigation**
+
 ```
 ┌─────────────────────────────────┐
 │ 🌍 Obs Explorer        [☰ Menu] │
@@ -318,6 +320,7 @@ This document defines the layout structure for all pages in the Observation Expl
 ```
 
 ### **Mobile Adaptations**
+
 - **Navigation**: Hamburger menu + bottom tab bar
 - **Cards**: Single column layout with larger touch targets
 - **Maps**: Full-screen with overlay controls
@@ -330,18 +333,21 @@ This document defines the layout structure for all pages in the Observation Expl
 ## **🎨 Design System Notes**
 
 ### **Color Coding**
+
 - **🔴 Common Species**: Red indicators
-- **🟡 Moderate Rarity**: Yellow indicators  
+- **🟡 Moderate Rarity**: Yellow indicators
 - **🟠 Rare Species**: Orange indicators
 - **🔵 Map Pins**: Blue for birds, Green for plants, etc.
 
 ### **Component Patterns**
+
 - **Cards**: Consistent shadowing and borders
 - **Buttons**: Primary (filled) and Secondary (outline)
 - **Icons**: Lucide React icons throughout
 - **Typography**: Geist Sans for text, Geist Mono for code
 
 ### **Layout Principles**
+
 - **Grid System**: 12-column responsive grid
 - **Spacing**: 4px base unit (4, 8, 16, 24, 32px)
 - **Breakpoints**: Mobile (768px), Tablet (1024px), Desktop (1280px+)

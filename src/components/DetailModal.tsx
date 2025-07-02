@@ -9,12 +9,17 @@ import {
 import type {
   Challenge,
   Country,
-  Species,
   Region,
   RegionSpeciesList,
 } from 'observation-js';
+import type { SpeciesDataWithCount } from '@/types/observations';
 
-type DataItem = Challenge | Country | Species | Region | RegionSpeciesList;
+type DataItem =
+  | Challenge
+  | Country
+  | SpeciesDataWithCount
+  | Region
+  | RegionSpeciesList;
 
 interface DetailModalProps {
   isOpen: boolean;

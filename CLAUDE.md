@@ -17,12 +17,14 @@ Please refer to [`DEVELOPMENT_PLAN.md`](./DEVELOPMENT_PLAN.md) for the complete,
 **⚠️ CRITICAL: Always update [`PROGRESS.md`](./PROGRESS.md) when features are completed**
 
 Track development progress with detailed checkboxes for each feature:
+
 - **Phase 1**: Basic Observations View (Map, Table, Details)
 - **Phase 2**: Basic Species View (Browser, Profiles, Data)
 - **Phase 3**: Basic User Dashboard (Auth, Stats, Achievements)
 - **Phase 4**: Enhanced Features (Advanced functionality)
 
 **📝 Update Rules:**
+
 - Check off tasks immediately when completed
 - Update "Last Updated" date and completion count
 - Reference this file in commit messages for completed features
@@ -32,6 +34,7 @@ Track development progress with detailed checkboxes for each feature:
 **Visual specifications for all pages: [`PAGE_LAYOUTS.md`](./PAGE_LAYOUTS.md)**
 
 Detailed layout wireframes and component specifications:
+
 - **Home Page**: Hero section with stats and quick access
 - **Observations Page**: Map/table views with filtering
 - **Species Pages**: Browser grid and detailed profiles
@@ -50,6 +53,7 @@ The current iteration focuses on three main areas:
 
 - **Framework**: Next.js 15+ with App Router
 - **API**: observation-js SDK for waarneming.nl data
+  - **Documentation**: https://robbeverhelst.github.io/observation-js/
 - **Authentication**: Google OAuth + optional waarneming.nl linking
 - **Maps**: Mapbox GL for geographic visualization
 - **UI Components**: shadcn/ui with Tailwind CSS
@@ -57,12 +61,14 @@ The current iteration focuses on three main areas:
 ## 📝 **Development Guidelines**
 
 ### **Type Safety & API Integration**
+
 - **ALWAYS use observation-js types** as the base for our interfaces
 - **Import types from observation-js** before creating custom ones
 - **Extend observation-js types** rather than recreating them
 - **Keep code clean** by leveraging the existing type system
 
 Example:
+
 ```typescript
 import type { Observation, Species, User } from 'observation-js';
 

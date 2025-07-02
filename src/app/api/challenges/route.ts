@@ -3,7 +3,8 @@ import { client } from '@/lib/observation-client';
 
 export async function GET() {
   try {
-    const response = await client.challenges.list();
+    const challenges = await client.challenges();
+    const response = await challenges.list();
 
     // Handle response format - could be paginated or direct array
     const results = 'results' in response ? response.results : response;

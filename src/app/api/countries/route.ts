@@ -3,7 +3,8 @@ import { client } from '@/lib/observation-client';
 
 export async function GET() {
   try {
-    const response = await client.countries.list();
+    const countries = await client.countries();
+    const response = await countries.list();
 
     // Handle response format - could be paginated or direct array
     const results = 'results' in response ? response.results : response;

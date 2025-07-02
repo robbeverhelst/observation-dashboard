@@ -10,14 +10,16 @@ export async function GET(request: Request) {
 
     if (speciesId) {
       // Get specific species by ID
-      const species = await client.species.get(parseInt(speciesId));
+      const speciesClient = await client.species();
+      const species = await speciesClient.get(parseInt(speciesId));
       return NextResponse.json({ results: [species] });
     }
 
     if (search) {
       // Search for species (try with auth)
       try {
-        const response = await client.species.search({
+        const speciesClient = await client.species();
+        const response = await speciesClient.search({
           q: search,
         });
 
@@ -34,12 +36,13 @@ export async function GET(request: Request) {
     }
 
     // Get species from region species lists (fallback)
-    const listsResponse = await client.regionSpeciesLists.list();
+    const regionSpeciesLists = await client.regionSpeciesLists();
+    const listsResponse = await regionSpeciesLists.list();
 
     if (listsResponse && listsResponse.length > 0) {
       // Get species from the first available list
       const firstListId = listsResponse[0].id;
-      const species = await client.regionSpeciesLists.getSpecies(firstListId);
+      const species = await regionSpeciesLists.getSpecies(firstListId);
 
       // Return limited species
       const results = species.slice(0, parseInt(limit));
