@@ -12,6 +12,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { DetailModal } from '@/components/DetailModal';
+import { SpeciesCard } from '@/components/SpeciesCard';
+import { StatsCard } from '@/components/StatsCard';
+import { MapComponent } from '@/components/MapComponent';
+import { Globe, Eye, Leaf, MapPin, TrendingUp, Award } from 'lucide-react';
 import type {
   Challenge,
   Country,
@@ -116,12 +120,51 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-12">
         <div className="text-center space-y-8">
           <div className="space-y-4">
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-              Observation Dashboard
+              🌍 Observation Explorer
             </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Discover biodiversity through real-time species observations and
+              interactive data visualization
+            </p>
+          </div>
+
+          {/* Hero Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <StatsCard
+              title="Species Observed"
+              value={species.length}
+              icon={Leaf}
+              badge="Live"
+            />
+            <StatsCard
+              title="Active Challenges"
+              value={
+                challenges.filter((c) => {
+                  const now = new Date();
+                  const start = new Date(c.start_date_time);
+                  const end = new Date(c.end_date_time);
+                  return now >= start && now <= end;
+                }).length
+              }
+              icon={Award}
+              badge="Now"
+            />
+            <StatsCard
+              title="Countries"
+              value={countries.length}
+              icon={Globe}
+              badge="Global"
+            />
+            <StatsCard
+              title="Regions"
+              value={regions.length}
+              icon={MapPin}
+              badge="Areas"
+            />
           </div>
         </div>
       </section>
@@ -229,36 +272,19 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="species" className="space-y-6">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {species.map((speciesItem, index) => (
-                <Card
+                <SpeciesCard
                   key={speciesItem.id || `species-${index}`}
-                  className="hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => handleItemClick(speciesItem, 'species')}
-                >
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base line-clamp-2">
-                      {speciesItem.name}
-                    </CardTitle>
-                    {speciesItem.scientific_name && (
-                      <CardDescription className="text-xs italic line-clamp-1">
-                        {speciesItem.scientific_name}
-                      </CardDescription>
-                    )}
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">
-                        #{speciesItem.id}
-                      </span>
-                      {speciesItem.group_name && (
-                        <Badge variant="outline" className="text-xs">
-                          {speciesItem.group_name}
-                        </Badge>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                  species={speciesItem}
+                  onViewDetails={(species) =>
+                    handleItemClick(species, 'species')
+                  }
+                  onViewObservations={(species) => {
+                    // TODO: Implement observation viewing
+                    console.log('View observations for:', species.name);
+                  }}
+                />
               ))}
             </div>
           </TabsContent>
@@ -330,71 +356,99 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent value="insights" className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <StatsCard
+                title="Platform Statistics"
+                value="Live Data"
+                description="Real-time biodiversity insights"
+                icon={TrendingUp}
+                className="md:col-span-2 lg:col-span-1"
+              />
+              <StatsCard
+                title="Total Observations"
+                value={species.reduce(
+                  (sum, s) =>
+                    sum +
+                    ((s as unknown as { observation_count?: number })
+                      .observation_count || 0),
+                  0
+                )}
+                description="Across all species"
+                icon={Eye}
+              />
+              <StatsCard
+                title="Data Coverage"
+                value={`${countries.length}+ countries`}
+                description="Global biodiversity data"
+                icon={Globe}
+              />
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Platform Statistics</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="w-5 h-5" />
+                    Geographic Distribution
+                  </CardTitle>
                   <CardDescription>
-                    Key metrics from the observation database
+                    Observation locations across regions
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">
-                      Active Challenges
-                    </span>
-                    <Badge>
-                      {
-                        challenges.filter((c) => {
-                          const now = new Date();
-                          const start = new Date(c.start_date_time);
-                          const end = new Date(c.end_date_time);
-                          return now >= start && now <= end;
-                        }).length
-                      }
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Total Countries</span>
-                    <Badge>{countries.length}+</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Species Lists</span>
-                    <Badge>{speciesLists.length}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Regions</span>
-                    <Badge>{regions.length}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Species</span>
-                    <Badge>{species.length}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Data Source</span>
-                    <Badge variant="outline">Live API</Badge>
-                  </div>
+                <CardContent>
+                  <MapComponent observations={[]} height="300px" />
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>About the Data</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Leaf className="w-5 h-5" />
+                    Species Diversity
+                  </CardTitle>
                   <CardDescription>
-                    Information about this showcase
+                    Species breakdown by taxonomic groups
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    All data displayed on this dashboard is fetched in real-time
-                    from the Observation International database using the
-                    observation-js library. This demonstrates the power and
-                    accessibility of biodiversity data through public API
-                    endpoints.
-                  </p>
+                <CardContent className="space-y-4">
+                  {species.slice(0, 5).map((s, i) => (
+                    <div key={i} className="flex justify-between items-center">
+                      <span className="text-sm font-medium">
+                        {s.group_name || 'Unknown Group'}
+                      </span>
+                      <Badge variant="outline">
+                        {(s as unknown as { observation_count?: number })
+                          .observation_count || 0}
+                      </Badge>
+                    </div>
+                  ))}
+                  <div className="pt-2 border-t">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">Total Species</span>
+                      <Badge>{species.length}</Badge>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>About the Data</CardTitle>
+                <CardDescription>
+                  Real-time biodiversity information
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  All data displayed on this dashboard is fetched in real-time
+                  from the Observation International database using the
+                  observation-js library. This demonstrates the power and
+                  accessibility of biodiversity data through public API
+                  endpoints for research and conservation efforts.
+                </p>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </section>

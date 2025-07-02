@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ObservationClient } from 'observation-js';
-
-const client = new ObservationClient();
+import { client } from '@/lib/observation-client';
 
 export async function GET() {
   try {

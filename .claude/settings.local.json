@@ -1,0 +1,6 @@
+{
+  "permissions": {
+    "allow": ["Bash(bun run:*)", "WebFetch(domain:robbeverhelst.github.io)"],
+    "deny": []
+  }
+}

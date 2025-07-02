@@ -1,17 +1,22 @@
 import { NextResponse } from 'next/server';
-import { ObservationClient } from 'observation-js';
+import { client } from '@/lib/observation-client';
 
-const client = new ObservationClient();
-
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    // Get real species lists from the observation database
-    const response = await client.regionSpeciesLists.list();
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type') || 'groups';
 
-    // The API returns an array directly, so wrap it in results format
-    const results = Array.isArray(response) ? response : [];
-
-    return NextResponse.json({ results });
+    if (type === 'groups') {
+      // Get species groups/categories
+      const response = await client.species.listGroups();
+      const results = 'results' in response ? response.results : response;
+      return NextResponse.json({ results });
+    } else {
+      // Get regional species lists (existing functionality)
+      const response = await client.regionSpeciesLists.list();
+      const results = Array.isArray(response) ? response : [];
+      return NextResponse.json({ results });
+    }
   } catch (error) {
     console.error('Error fetching species data:', error);
     return NextResponse.json(
