@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "rm -rf .next node_modules/.cache .turbo",
-    "ci": "bun run format && bun run lint && bun run build",
+    "ci": "bun run format:check && bun run lint && bun run build",
     "redis:start": "docker-compose up -d redis 2>/dev/null || echo 'Redis already running or starting...'",
     "redis:stop": "docker-compose stop redis",
     "redis:restart": "bun run redis:stop && bun run redis:start",

@@ -45,7 +45,7 @@ bun install
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) to view the dashboard.
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
 ## 📋 Available Scripts
 
@@ -67,7 +67,7 @@ bun run ci           # Run full CI pipeline (format + lint + build)
 bun run docker:build    # Build production Docker image
 bun run docker:run      # Run production container
 bun run docker:prod     # Start production with docker-compose
-bun run docker:dev      # Start development with docker-compose (port 3001)
+bun run docker:dev      # Start development with docker-compose
 bun run docker:stop     # Stop all containers
 bun run docker:clean    # Complete cleanup
 ```
