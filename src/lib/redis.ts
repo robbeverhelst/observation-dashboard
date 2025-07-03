@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+import { recordCacheHit, recordCacheMiss, recordError } from '@/lib/metrics';
 
 let redis: Redis | null = null;
 
@@ -147,20 +148,64 @@ export async function withCache<T>(
   fetchFunction: () => Promise<T>,
   options: CacheOptions = {}
 ): Promise<T> {
+  const startTime = Date.now();
+
   // Try to get from cache first
   const cached = await cache.get<T>(cacheKey, options);
   if (cached !== null) {
-    console.log(`📦 Cache HIT: ${cacheKey}`);
+    const hitTime = Date.now() - startTime;
+    const keyPrefix = cacheKey.split(':')[0];
+
+    // Only log cache hits for non-check endpoints to reduce noise
+    if (!cacheKey.includes('latest-check')) {
+      console.log(`📦 Cache HIT: ${cacheKey} (${hitTime}ms)`);
+    }
+
+    // Record Prometheus metrics
+    recordCacheHit('redis', keyPrefix, hitTime);
+
+    // Track legacy metrics
+    trackCacheMetric('hit', cacheKey, hitTime);
     return cached;
   }
 
+  const keyPrefix = cacheKey.split(':')[0];
   console.log(`🔄 Cache MISS: ${cacheKey}`);
 
+  // Record cache miss metrics
+  const missTime = Date.now() - startTime;
+  recordCacheMiss('redis', keyPrefix, missTime);
+  trackCacheMetric('miss', cacheKey, 0);
+
   // Fetch fresh data
-  const data = await fetchFunction();
+  const fetchStart = Date.now();
+  try {
+    const data = await fetchFunction();
+    const fetchTime = Date.now() - fetchStart;
 
-  // Cache the result
-  await cache.set(cacheKey, data, options);
+    console.log(`⏱️  Fetch time: ${fetchTime}ms`);
+    trackCacheMetric('fetch_time', cacheKey, fetchTime);
 
-  return data;
+    // Cache the result
+    await cache.set(cacheKey, data, options);
+
+    return data;
+  } catch (error) {
+    recordError('fetch_error', 'cache', 'medium');
+    console.error(`❌ Fetch error for ${cacheKey}:`, error);
+    throw error;
+  }
+}
+
+// Simple metrics tracking (expand as needed)
+function trackCacheMetric(
+  type: 'hit' | 'miss' | 'fetch_time',
+  key: string,
+  value: number
+) {
+  // Send to your monitoring service (Datadog, New Relic, etc.)
+  // For now, just log
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[CACHE METRIC] ${type}: ${key} = ${value}`);
+  }
 }

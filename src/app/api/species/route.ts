@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
+import { withCacheHeaders } from '@/middleware/cache-headers';
 import { client } from '@/lib/observation-client';
-import { withCache } from '@/lib/redis';
+import { withSWR } from '@/lib/cache-swr';
 
 export async function GET(request: Request) {
   try {
@@ -21,16 +22,25 @@ export async function GET(request: Request) {
         );
       }
 
-      const species = await withCache(
+      const speciesResult = await withSWR(
         `species:${speciesIdNum}`,
         async () => {
           const speciesClient = await client.species();
           return await speciesClient.get(speciesIdNum);
         },
-        { ttl: 1800, prefix: 'api' } // Cache for 30 minutes
+        {
+          ttl: 14400, // Fresh for 4 hours (species data rarely changes)
+          staleWhileRevalidate: 86400, // Serve stale for 24 hours while revalidating
+          prefix: 'api',
+          tags: ['species', 'single-species', `species-${speciesIdNum}`],
+        }
       );
+      const species = speciesResult.data;
 
-      return NextResponse.json(species);
+      return withCacheHeaders(
+        NextResponse.json(species),
+        { maxAge: 600, sMaxAge: 3600 } // 10 min browser, 1 hour CDN
+      );
     }
 
     if (search) {
@@ -46,9 +56,15 @@ export async function GET(request: Request) {
         const limitedResults = Array.isArray(results)
           ? results.slice(0, limit)
           : results;
-        return NextResponse.json({ results: limitedResults });
+        return withCacheHeaders(
+          NextResponse.json({ results: limitedResults }),
+          { maxAge: 300, sMaxAge: 600 } // 5 min browser, 10 min CDN
+        );
       } catch {
-        return NextResponse.json({ results: [] });
+        return withCacheHeaders(
+          NextResponse.json({ results: [] }),
+          { maxAge: 60, sMaxAge: 300 } // 1 min browser, 5 min CDN
+        );
       }
     }
 
@@ -117,7 +133,10 @@ export async function GET(request: Request) {
         }
       }
 
-      return NextResponse.json({ results: speciesWithPhotos });
+      return withCacheHeaders(
+        NextResponse.json({ results: speciesWithPhotos }),
+        { maxAge: 300, sMaxAge: 1800 } // 5 min browser, 30 min CDN
+      );
     } else {
       return NextResponse.json({ results: [] });
     }

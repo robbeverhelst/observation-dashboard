@@ -36,6 +36,10 @@ export const client = {
     const c = await getClient();
     return c.species;
   },
+  async observations() {
+    const c = await getClient();
+    return c.observations;
+  },
   async countries() {
     const c = await getClient();
     return c.countries;

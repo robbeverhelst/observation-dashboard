@@ -26,6 +26,10 @@ import {
   Table as TableIcon,
 } from 'lucide-react';
 import type { ObservationPoint } from '@/types/observations';
+import { NewDataNotification } from '@/components/NewDataNotification';
+import { RefreshButton } from '@/components/RefreshButton';
+import { recordUserRefresh, recordObservationsDisplayed } from '@/lib/metrics';
+import { smartPrefetch } from '@/lib/prefetching';
 
 // Helper function to map species group IDs to names
 function getGroupName(groupId?: number): string | null {
@@ -116,6 +120,14 @@ export default function ObservationsPage() {
       const data = await response.json();
       console.log('📊 API response data:', data);
       setObservations(data.results || []);
+
+      // Trigger smart prefetching for observation details
+      if (data.results?.length > 0) {
+        smartPrefetch({
+          page: 'observations',
+          data: data,
+        }).catch(console.warn);
+      }
     } catch (err) {
       console.error('💥 Error fetching observations:', err);
       setError('Failed to load observations');
@@ -140,7 +152,79 @@ export default function ObservationsPage() {
   }, [mapBounds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRefresh = () => {
+    recordUserRefresh('normal', 'observations');
     fetchObservations();
+  };
+
+  const handleForceRefresh = async () => {
+    console.log('🔄 Force refresh triggered');
+    recordUserRefresh('force', 'observations');
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Clear caches to ensure we get fresh data
+      await fetch('/api/observations/check-new?clear=true');
+
+      // Also clear localStorage to reset the new data detection
+      localStorage.removeItem('lastObservationCheck');
+
+      // Add refresh parameter to bypass cache
+      const params = new URLSearchParams({
+        limit: '500',
+        refresh: Date.now().toString(),
+      });
+
+      // If we have map bounds and are in map view, use geographic filtering
+      if (mapBounds && viewMode === 'map') {
+        params.append('type', 'bounds');
+        params.append(
+          'bounds',
+          JSON.stringify({
+            north: mapBounds.north,
+            south: mapBounds.south,
+            east: mapBounds.east,
+            west: mapBounds.west,
+          })
+        );
+      } else {
+        params.append('type', 'search');
+      }
+
+      if (searchQuery) {
+        params.append('search', searchQuery);
+      }
+
+      console.log(
+        '📡 Force refresh API request to:',
+        `/api/observations?${params}`
+      );
+      const response = await fetch(`/api/observations?${params}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch observations');
+      }
+
+      const data = await response.json();
+      console.log(
+        '📊 Force refresh got data:',
+        data.results?.length,
+        'observations'
+      );
+      setObservations(data.results || []);
+
+      // Record observations displayed
+      recordObservationsDisplayed(
+        data.results?.length || 0,
+        viewMode,
+        'force_refresh'
+      );
+    } catch (err) {
+      console.error('Error in force refresh:', err);
+      setError('Failed to load observations');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearch = (value: string) => {
@@ -199,11 +283,20 @@ export default function ObservationsPage() {
             Real-time biodiversity observations from around the world
           </p>
         </div>
-        <Button onClick={handleRefresh} variant="outline" size="sm">
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Refresh
-        </Button>
+        <RefreshButton
+          onRefresh={handleRefresh}
+          isLoading={loading}
+          variant="outline"
+          size="sm"
+        />
       </div>
+
+      {/* New Data Notification */}
+      <NewDataNotification
+        onRefresh={handleForceRefresh}
+        checkInterval={60000} // Check every minute
+        enabled={!loading} // Don't check while loading
+      />
 
       {/* Controls */}
       <div className="flex items-center justify-between gap-4">

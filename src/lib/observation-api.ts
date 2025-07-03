@@ -1,4 +1,6 @@
 import { getClient } from './observation-client';
+import { recordExternalApiCall, recordError } from '@/lib/metrics';
+import { withDeduplication } from '@/lib/request-deduplication';
 import type {
   ObservationPoint,
   ObservationSearchParams,
@@ -58,68 +60,107 @@ function calculateRarity(
  * Note: observation-js doesn't have a general search, so we'll need to implement
  * this differently. For now, return empty results with proper pagination structure.
  */
-export async function searchObservations(
+const _searchObservations = async (
   params: ObservationSearchParams = {}
-): Promise<PaginatedObservationResponse> {
-  const client = await getClient();
+): Promise<PaginatedObservationResponse> => {
+  const startTime = Date.now();
 
-  // Use getByUser() to get your own observations, or getAroundPoint() for location-based
-  let observations;
+  try {
+    const client = await getClient();
 
-  if (params.observer_id) {
-    observations = await client.observations.getByUser(
-      parseInt(params.observer_id),
-      {
-        limit: params.limit || 50,
-        offset: params.offset || 0,
-      }
-    );
-  } else {
-    // First try to get your own observations since we know they exist
-    try {
-      console.log('Trying to get authenticated user observations first...');
-      observations = await client.observations.getByUser(undefined, {
-        limit: params.limit || 50,
-        offset: params.offset || 0,
-      });
-      if (observations.results?.length > 0) {
-        console.log(`Found ${observations.results.length} user observations`);
-      } else {
-        throw new Error('No user observations found, trying around point');
-      }
-    } catch (userError) {
-      console.log(
-        'User observations failed, trying around point:',
-        (userError as Error).message
+    // Use getByUser() to get your own observations, or getAroundPoint() for location-based
+    let observations;
+
+    if (params.observer_id) {
+      observations = await client.observations.getByUser(
+        parseInt(params.observer_id),
+        {
+          limit: params.limit || 50,
+          offset: params.offset || 0,
+        }
       );
+    } else {
+      // First try to get your own observations since we know they exist
       try {
-        // Default: get observations around Netherlands center
-        observations = await client.observations.getAroundPoint({
-          lat: 52.3676, // Amsterdam coordinates
-          lng: 4.9041,
+        console.log('Trying to get authenticated user observations first...');
+        observations = await client.observations.getByUser(undefined, {
           limit: params.limit || 50,
           offset: params.offset || 0,
         });
-      } catch (error) {
-        console.error('getAroundPoint failed, error details:', error);
-        console.error('Error body:', (error as { body?: unknown }).body);
+        if (observations.results?.length > 0) {
+          console.log(`Found ${observations.results.length} user observations`);
+        } else {
+          throw new Error('No user observations found, trying around point');
+        }
+      } catch (userError) {
+        console.log(
+          'User observations failed, trying around point:',
+          (userError as Error).message
+        );
+        try {
+          // Default: get observations around Netherlands center
+          observations = await client.observations.getAroundPoint({
+            lat: 52.3676, // Amsterdam coordinates
+            lng: 4.9041,
+            limit: params.limit || 50,
+            offset: params.offset || 0,
+          });
+        } catch (error) {
+          console.error('getAroundPoint failed, error details:', error);
+          console.error('Error body:', (error as { body?: unknown }).body);
 
-        throw error; // throw original error
+          throw error; // throw original error
+        }
       }
     }
+
+    const transformedObservations =
+      observations.results?.map(transformObservation) || [];
+
+    // Record successful API call metrics
+    const duration = Date.now() - startTime;
+    recordExternalApiCall(
+      'waarneming_nl',
+      'search_observations',
+      'success',
+      duration
+    );
+
+    return {
+      count: observations.count || 0,
+      next: observations.next || null,
+      previous: observations.previous || null,
+      results: transformedObservations,
+      hasMore: (observations.results?.length || 0) === (params.limit || 50),
+    };
+  } catch (error) {
+    // Record failed API call metrics
+    const duration = Date.now() - startTime;
+    recordExternalApiCall(
+      'waarneming_nl',
+      'search_observations',
+      'error',
+      duration
+    );
+    recordError('api_error', 'observation_api', 'high');
+    throw error;
   }
+};
 
-  const transformedObservations =
-    observations.results?.map(transformObservation) || [];
-
-  return {
-    count: observations.count || 0,
-    next: observations.next || null,
-    previous: observations.previous || null,
-    results: transformedObservations,
-    hasMore: (observations.results?.length || 0) === (params.limit || 50),
-  };
-}
+// Export deduplicated version
+export const searchObservations = withDeduplication(
+  _searchObservations,
+  (params = {}) => {
+    const key = JSON.stringify({
+      observer_id: params.observer_id,
+      limit: params.limit || 50,
+      offset: params.offset || 0,
+      search_query: params.search_query,
+    });
+    return `search_observations:${key}`;
+  },
+  'observations'
+);
 
 /**
  * Get species seen around a geographic point
@@ -178,9 +219,9 @@ export async function getObservationsInBounds(
 /**
  * Get a single observation by ID
  */
-export async function getObservation(
+const _getObservation = async (
   id: number
-): Promise<ObservationPoint | null> {
+): Promise<ObservationPoint | null> => {
   try {
     const client = await getClient();
     const observation = await client.observations.get(id);
@@ -189,7 +230,13 @@ export async function getObservation(
     console.error('Error fetching observation:', error);
     return null;
   }
-}
+};
+
+export const getObservation = withDeduplication(
+  _getObservation,
+  (id: number) => `observation:${id}`,
+  'observation'
+);
 
 /**
  * Get observations for a specific species

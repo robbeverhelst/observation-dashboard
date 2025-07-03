@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import type { ObservationPoint } from '@/types/observations';
 import { SPECIES_GROUP_COLORS } from '@/types/observations';
+import { smartPrefetch } from '@/lib/prefetching';
 
 interface DashboardStats {
   totalObservations: number;
@@ -79,6 +80,12 @@ export default function DashboardPage() {
       const data = await response.json();
       const obsData = data.results || [];
       calculateStats(obsData);
+
+      // Trigger smart prefetching for dashboard context
+      smartPrefetch({
+        page: 'dashboard',
+        data: obsData,
+      }).catch(console.warn);
     } catch (err) {
       console.error('Error fetching observations:', err);
       setError('Failed to load dashboard data');

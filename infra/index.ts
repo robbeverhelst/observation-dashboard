@@ -138,7 +138,7 @@ const webApp = new WebAppResource('web', {
   provider,
   image: webImage,
   port: 3000,
-  labels: { app: `${appName}-web` },
+  labels: { app: appName },
   env: webEnv,
   dependencies: [ns, redis.chart],
 });
@@ -169,7 +169,7 @@ new NetworkPolicy(
     },
     spec: {
       podSelector: {
-        matchLabels: { app: `${appName}-web` },
+        matchLabels: { app: appName },
       },
       policyTypes: ['Ingress', 'Egress'],
       ingress: [
@@ -249,7 +249,7 @@ new NetworkPolicy(
           from: [
             {
               podSelector: {
-                matchLabels: { app: `${appName}-web` },
+                matchLabels: { app: appName },
               },
             },
           ],
@@ -284,6 +284,11 @@ export const serviceNamespace = namespace;
 export const kubernetesCluster = config.require('clusterName');
 export const webServiceUrl = webApp.serviceUrl;
 export const deployedVersion = appVersion;
+
+// Export monitoring details
+export const serviceMonitorName = webApp.serviceMonitor.metadata.apply(
+  (m) => m.name
+);
 
 // Export Redis connection details
 export const redisServiceName = redis.serviceName;

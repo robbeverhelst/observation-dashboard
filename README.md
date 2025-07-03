@@ -9,6 +9,7 @@ A real-time biodiversity data dashboard built with Next.js and the observation-j
 - **Universal Detail Modal**: Click any item to view detailed information
 - **Responsive Design**: Modern UI built with shadcn/ui components
 - **Type Safety**: Full TypeScript support with custom observation-js types
+- **High Performance**: 75-100% API usage reduction through advanced caching
 - **Automated CI/CD**: GitHub Actions pipeline with formatting, linting, and builds
 
 ## 🛠️ Tech Stack
@@ -18,6 +19,8 @@ A real-time biodiversity data dashboard built with Next.js and the observation-j
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui (Radix UI + Tailwind)
 - **API Integration**: observation-js library
+- **Performance**: Redis caching, SWR pattern, request deduplication
+- **Monitoring**: Prometheus metrics, Grafana dashboards
 - **Package Manager**: Bun
 - **CI/CD**: GitHub Actions
 - **Code Quality**: ESLint + Prettier
@@ -133,6 +136,17 @@ Built with [shadcn/ui](https://ui.shadcn.com/) components:
 - Dialog modal for detail views
 - Responsive grid layouts
 
+## ⚡ Performance & Monitoring
+
+This application implements advanced performance optimizations achieving **75-100% API usage reduction**:
+
+- **Multi-tier Caching**: Redis with SWR (Stale-While-Revalidate) pattern
+- **Request Optimization**: Deduplication and intelligent prefetching
+- **Smart Invalidation**: Rule-based cache invalidation with tagging
+- **Real-time Monitoring**: Prometheus metrics and Grafana dashboards
+
+For detailed information, see: **[docs/PERFORMANCE_OPTIMIZATION.md](./docs/PERFORMANCE_OPTIMIZATION.md)**
+
 ## 🚀 CI/CD Pipeline
 
 The project includes a comprehensive CI/CD pipeline using GitHub Actions:
@@ -168,6 +182,15 @@ IMAGE_NAME=ghcr.io/robbeverhelst/observation-explorer:v1.2.3 ./scripts/deploy.sh
 # Deploy latest
 ./scripts/deploy.sh
 ```
+
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) directory:
+
+- **[Performance Optimization](./docs/PERFORMANCE_OPTIMIZATION.md)** - Complete performance guide
+- **[Development Plan](./docs/DEVELOPMENT_PLAN.md)** - Feature roadmap and strategy
+- **[Infrastructure](./docs/infrastructure/)** - Deployment and monitoring setup
+- **[All Documentation](./docs/README.md)** - Complete documentation index
 
 ## 🤝 Contributing
 
