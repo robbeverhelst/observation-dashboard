@@ -22,7 +22,10 @@ console.log(`Web image: ${webImage}`);
 
 // Redis configuration - prefer environment variable over Pulumi config
 const redisConfig = {
-  password: process.env.REDIS_PASSWORD || config.get('redisPassword') || 'redis_password_change_me',
+  password:
+    process.env.REDIS_PASSWORD ||
+    config.get('redisPassword') ||
+    'redis_password_change_me',
 };
 
 // Create a Kubernetes provider instance that uses kubeconfig from Pulumi configuration

@@ -1,14 +1,12 @@
 # [1.1.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.0.0...v1.1.0) (2025-07-03)
 
-
 ### Bug Fixes
 
-* update dashboard port in README and CI command in package.json ([b52cd79](https://github.com/robbeverhelst/observation-explorer/commit/b52cd79383a2fa3393a41f562ca746497613b2cb))
-
+- update dashboard port in README and CI command in package.json ([b52cd79](https://github.com/robbeverhelst/observation-explorer/commit/b52cd79383a2fa3393a41f562ca746497613b2cb))
 
 ### Features
 
-* add caching and instrumentation for API responses, enhance health and metrics endpoints ([6c1b9f4](https://github.com/robbeverhelst/observation-explorer/commit/6c1b9f42cf64f217f09247b061e81c8fe2884b21))
+- add caching and instrumentation for API responses, enhance health and metrics endpoints ([6c1b9f4](https://github.com/robbeverhelst/observation-explorer/commit/6c1b9f42cf64f217f09247b061e81c8fe2884b21))
 
 # 1.0.0 (2025-07-02)
 
