@@ -1,4 +1,4 @@
-import { Input, Output, Resource } from '@pulumi/pulumi';
+import { Input, Resource } from '@pulumi/pulumi';
 import { Provider } from '@pulumi/kubernetes';
 
 export interface BaseResourceConfig {

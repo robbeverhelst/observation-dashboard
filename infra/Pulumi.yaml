@@ -1,4 +1,4 @@
-name: observation-explorer-infra
+name: observation-explorer
 runtime:
   name: nodejs
   options:

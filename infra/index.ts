@@ -20,9 +20,9 @@ const webImage =
   `ghcr.io/robbeverhelst/observation-explorer:${appVersion}`;
 console.log(`Web image: ${webImage}`);
 
-// Redis configuration
+// Redis configuration - prefer environment variable over Pulumi config
 const redisConfig = {
-  password: config.get('redisPassword') || 'redis_password_change_me',
+  password: process.env.REDIS_PASSWORD || config.get('redisPassword') || 'redis_password_change_me',
 };
 
 // Create a Kubernetes provider instance that uses kubeconfig from Pulumi configuration
@@ -128,6 +128,27 @@ const webEnv = [
   {
     name: 'APP_VERSION',
     value: appVersion,
+  },
+  // OAuth credentials for Observation API
+  {
+    name: 'OAUTH_GRANT_TYPE',
+    value: process.env.OAUTH_GRANT_TYPE || 'password',
+  },
+  {
+    name: 'OAUTH_CLIENT_ID',
+    value: process.env.OAUTH_CLIENT_ID || '',
+  },
+  {
+    name: 'OAUTH_CLIENT_SECRET',
+    value: process.env.OAUTH_CLIENT_SECRET || '',
+  },
+  {
+    name: 'OAUTH_USERNAME',
+    value: process.env.OAUTH_USERNAME || '',
+  },
+  {
+    name: 'OAUTH_PASSWORD',
+    value: process.env.OAUTH_PASSWORD || '',
   },
 ];
 

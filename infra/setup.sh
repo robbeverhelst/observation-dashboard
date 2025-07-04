@@ -106,24 +106,6 @@ configure_pulumi() {
     log_info "Setting kubeconfig from $kubeconfig_path..."
     pulumi config set --secret kubeconfig "$(cat "$kubeconfig_path")"
     
-    # GitHub credentials setup
-    echo ""
-    echo "GitHub Container Registry Configuration:"
-    read -p "Enter GitHub username: " github_username
-    
-    echo "Enter GitHub Personal Access Token (with read:packages scope):"
-    echo "(Note: Input will be hidden)"
-    read -rs github_token
-    echo ""
-    
-    if [ -z "$github_username" ] || [ -z "$github_token" ]; then
-        log_error "GitHub credentials cannot be empty"
-        exit 1
-    fi
-    
-    pulumi config set githubUsername "$github_username"
-    pulumi config set --secret githubToken "$github_token"
-    
     # Optional: Redis password
     echo ""
     read -p "Enter custom Redis password (press Enter for default): " redis_password
@@ -179,8 +161,11 @@ show_next_steps() {
     echo "Next steps:"
     echo "1. Review the preview output above"
     echo "2. If everything looks correct, deploy with: bun run deploy"
-    echo "3. Add PULUMI_CONFIG_PASSPHRASE to your GitHub repository secrets"
-    echo "4. The infrastructure will be available after deployment"
+    echo "3. Add the following to your GitHub repository secrets:"
+    echo "   - PULUMI_ACCESS_TOKEN"
+    echo "   - PULUMI_CONFIG_PASSPHRASE"
+    echo "4. For GitHub Actions deployment, set GHCR_USERNAME and GHCR_TOKEN in the workflow"
+    echo "5. The infrastructure will be available after deployment"
     echo ""
     echo "Available commands:"
     echo "  bun run preview  - Preview changes"

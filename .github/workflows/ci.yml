@@ -127,3 +127,84 @@ jobs:
           echo "✅ Docker image pushed successfully!"
           echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v${{ needs.release.outputs.new-release-version }}"
           echo "🏷️  Tags: ${{ steps.meta.outputs.tags }}"
+
+  deploy:
+    name: Deploy Infrastructure
+    needs: [build-and-push, release]
+    runs-on: arc-runner-set-observation-explorer
+    # Only run on main branch pushes, not PRs
+    if: github.event_name != 'pull_request' && needs.release.outputs.new-release-published == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main # Ensure we're using the latest main branch with the version update
+          fetch-depth: 1
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: ./infra
+        run: bun install
+
+      - name: Build infrastructure
+        working-directory: ./infra
+        run: bun run build
+
+      - name: Use version from release job
+        run: |
+          echo "VERSION=${{ needs.release.outputs.new-release-version }}" >> $GITHUB_ENV
+          echo "Using version: ${{ needs.release.outputs.new-release-version }}"
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "WEB_IMAGE=ghcr.io/${REPO_OWNER_LOWER}/observation-explorer:${{ needs.release.outputs.new-release-version }}" >> $GITHUB_ENV
+
+      - name: Pulumi Refresh
+        uses: pulumi/actions@v6
+        timeout-minutes: 5
+        with:
+          command: refresh
+          stack-name: prod
+          work-dir: ./infra
+          upsert: true
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+
+      - name: Pulumi Update
+        uses: pulumi/actions@v6
+        timeout-minutes: 5
+        with:
+          command: up
+          stack-name: prod
+          work-dir: ./infra
+          upsert: true
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          APP_VERSION: ${{ needs.release.outputs.new-release-version }}
+          WEB_IMAGE: ${{ env.WEB_IMAGE }}
+          GHCR_USERNAME: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Observation API OAuth credentials
+          OAUTH_GRANT_TYPE: ${{ secrets.OAUTH_GRANT_TYPE }}
+          OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+          OAUTH_USERNAME: ${{ secrets.OAUTH_USERNAME }}
+          OAUTH_PASSWORD: ${{ secrets.OAUTH_PASSWORD }}
+          # Redis password - set in GitHub secrets
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          # Optional environment variables - uncomment and set in GitHub secrets if needed
+          # MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          # GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+
+      - name: Clean up old resources (if any)
+        run: |
+          echo "Deployment completed successfully. Old resources will be garbage collected by Pulumi."
