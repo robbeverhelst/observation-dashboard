@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.1.0...v1.2.0) (2025-07-04)
+
+
+### Features
+
+* refactor infrastructure setup and enhance environment variable handling ([32fdae0](https://github.com/robbeverhelst/observation-explorer/commit/32fdae08f6e4bed88ee2d09e51f0af277c2d3a6f))
+
 # [1.1.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.0.0...v1.1.0) (2025-07-03)
 
 ### Bug Fixes
