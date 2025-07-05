@@ -1,10 +1,9 @@
 # [1.3.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.2.0...v1.3.0) (2025-07-04)
 
-
 ### Features
 
-* trigger deployment pipeline ([281c135](https://github.com/robbeverhelst/observation-explorer/commit/281c135f5eb221ce7927d94b76d7ec86871b5773))
-* trigger deployment pipeline ([d32b8de](https://github.com/robbeverhelst/observation-explorer/commit/d32b8deb8b7d85b8d3608db04fb57b272fe10348))
+- trigger deployment pipeline ([281c135](https://github.com/robbeverhelst/observation-explorer/commit/281c135f5eb221ce7927d94b76d7ec86871b5773))
+- trigger deployment pipeline ([d32b8de](https://github.com/robbeverhelst/observation-explorer/commit/d32b8deb8b7d85b8d3608db04fb57b272fe10348))
 
 # [1.2.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.1.0...v1.2.0) (2025-07-04)
 
