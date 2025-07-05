@@ -1,14 +1,12 @@
 # [1.4.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.3.0...v1.4.0) (2025-07-05)
 
-
 ### Bug Fixes
 
-* update CI workflow to improve semantic release logging and adjust CI command ([3ba7113](https://github.com/robbeverhelst/observation-explorer/commit/3ba7113e17a80bf1b511b1e40dcc9e85c28e3495))
-
+- update CI workflow to improve semantic release logging and adjust CI command ([3ba7113](https://github.com/robbeverhelst/observation-explorer/commit/3ba7113e17a80bf1b511b1e40dcc9e85c28e3495))
 
 ### Features
 
-* enhance semantic release logging and output handling ([de5f368](https://github.com/robbeverhelst/observation-explorer/commit/de5f368ed075895d36daf1c20df53196a7ec793c))
+- enhance semantic release logging and output handling ([de5f368](https://github.com/robbeverhelst/observation-explorer/commit/de5f368ed075895d36daf1c20df53196a7ec793c))
 
 # [1.3.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.2.0...v1.3.0) (2025-07-04)
 
