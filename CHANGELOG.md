@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/robbeverhelst/observation-explorer/compare/v1.4.0...v1.4.1) (2025-07-05)
+
+
+### Bug Fixes
+
+* comment out unsupported platforms in CI workflow ([9c2838d](https://github.com/robbeverhelst/observation-explorer/commit/9c2838d30f30d824ee0132a026e70bce923f9751))
+
 # [1.4.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.3.0...v1.4.0) (2025-07-05)
 
 ### Bug Fixes
