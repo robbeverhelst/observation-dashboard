@@ -89,7 +89,7 @@ const redis = new RedisResource('redis', {
   persistence: {
     enabled: true,
     size: '10Gi',
-    storageClass: 'truenas-hdd-mirror',
+    storageClass: 'truenas-hdd-mirror-iscsi',
   },
   dependencies: [ns],
 });

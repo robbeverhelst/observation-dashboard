@@ -11,7 +11,9 @@
       "Bash(mkdir:*)",
       "Bash(bun add:*)",
       "Bash(bun ci:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(helm show values:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

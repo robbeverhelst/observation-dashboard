@@ -60,6 +60,7 @@ export class RedisResource {
             redis: {
               password: password || 'redis_password_change_me',
             },
+            storageClass: persistence.storageClass || '',
           },
           architecture: 'standalone',
           auth: {
