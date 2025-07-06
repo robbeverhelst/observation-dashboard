@@ -88,7 +88,8 @@ const redis = new RedisResource('redis', {
   password: redisConfig.password,
   persistence: {
     enabled: true,
-    size: '1Gi',
+    size: '10Gi',
+    storageClass: 'truenas-hdd-mirror',
   },
   dependencies: [ns],
 });
