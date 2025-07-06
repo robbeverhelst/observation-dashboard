@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.8.0...v1.9.0) (2025-07-06)
+
+
+### Features
+
+* update environment variable for Mapbox access token to use NEXT_PUBLIC prefix ([a35f2a5](https://github.com/robbeverhelst/observation-explorer/commit/a35f2a574c8f87b29c620b8f398d477fb70f7d4e))
+
 # [1.8.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.7.0...v1.8.0) (2025-07-06)
 
 
