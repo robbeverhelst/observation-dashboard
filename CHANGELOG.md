@@ -1,3 +1,12 @@
+# [1.8.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.7.0...v1.8.0) (2025-07-06)
+
+
+### Features
+
+* add CSS variables for theming and enhance dark mode styles ([0af8593](https://github.com/robbeverhelst/observation-explorer/commit/0af85935013813fb6f979516033c6559d8ecb4d0))
+* refine CSS variable definitions and improve shadow styles for better theming ([c8e0923](https://github.com/robbeverhelst/observation-explorer/commit/c8e0923799af0e051a744f35a553ee9c488d5192))
+* update gha secrets ([8ff777d](https://github.com/robbeverhelst/observation-explorer/commit/8ff777d5770483a63f8bc6174f4679f73974ef42))
+
 # [1.7.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.6.0...v1.7.0) (2025-07-06)
 
 
