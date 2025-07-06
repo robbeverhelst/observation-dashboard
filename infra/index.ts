@@ -1,4 +1,4 @@
-import { Config, interpolate, output } from '@pulumi/pulumi';
+import { Config, interpolate } from '@pulumi/pulumi';
 import { Provider } from '@pulumi/kubernetes';
 import { Namespace } from '@pulumi/kubernetes/core/v1';
 import { NetworkPolicy } from '@pulumi/kubernetes/networking/v1';
