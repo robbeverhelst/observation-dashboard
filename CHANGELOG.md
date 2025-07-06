@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.9.0...v1.10.0) (2025-07-06)
+
+
+### Features
+
+* add startup script to inject runtime environment variables and update Dockerfile ([6e59d8a](https://github.com/robbeverhelst/observation-explorer/commit/6e59d8accfcbde0b193734b29095d4a713be2d63))
+
 # [1.9.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.8.0...v1.9.0) (2025-07-06)
 
 
