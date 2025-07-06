@@ -215,7 +215,7 @@ jobs:
           # Redis password - set in GitHub secrets
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           # Optional environment variables - uncomment and set in GitHub secrets if needed
-          # MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           # GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
 
       - name: Clean up old resources (if any)
