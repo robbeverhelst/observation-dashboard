@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.6.0...v1.7.0) (2025-07-06)
+
+
+### Features
+
+* update Redis storage class to 'truenas-hdd-mirror-iscsi' and enhance Bash command permissions ([b4f2b9e](https://github.com/robbeverhelst/observation-explorer/commit/b4f2b9ec64a4e7c4d17eb14999f62de8ef6f71e8))
+
 # [1.6.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.5.1...v1.6.0) (2025-07-06)
 
 
