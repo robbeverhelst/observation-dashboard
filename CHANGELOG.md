@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.4.1...v1.5.0) (2025-07-06)
+
+
+### Features
+
+* trigger deployment pipeline ([5f45f6e](https://github.com/robbeverhelst/observation-explorer/commit/5f45f6e02c45e8d8f9a9f10b01b827eed732fde0))
+
 ## [1.4.1](https://github.com/robbeverhelst/observation-explorer/compare/v1.4.0...v1.4.1) (2025-07-05)
 
 
