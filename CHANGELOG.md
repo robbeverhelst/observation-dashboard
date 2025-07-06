@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.10.0...v1.11.0) (2025-07-06)
+
+
+### Features
+
+* refactor environment variable handling and remove startup script ([d865149](https://github.com/robbeverhelst/observation-explorer/commit/d865149c2815edca3ec2569df8d72cce8210b22e))
+
 # [1.10.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.9.0...v1.10.0) (2025-07-06)
 
 
