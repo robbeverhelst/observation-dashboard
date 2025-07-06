@@ -17,10 +17,10 @@ export async function getClient() {
   });
 
   await client.getAccessTokenWithPassword({
-    clientId: process.env.OAUTH_CLIENT_ID,
-    clientSecret: process.env.OAUTH_CLIENT_SECRET,
-    email: process.env.OAUTH_USERNAME,
-    password: process.env.OAUTH_PASSWORD,
+    clientId: process.env.OAUTH_CLIENT_ID.trim(),
+    clientSecret: process.env.OAUTH_CLIENT_SECRET.trim(),
+    email: process.env.OAUTH_USERNAME.trim(),
+    password: process.env.OAUTH_PASSWORD.trim(),
   });
 
   return client;

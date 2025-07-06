@@ -181,9 +181,20 @@ export function MapComponent({
   };
 
   useEffect(() => {
+    // First try environment variable (for local dev)
     const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
     if (token) {
       setMapboxToken(token);
+    } else {
+      // Fetch from API endpoint (for production)
+      fetch('/api/config')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.mapboxAccessToken) {
+            setMapboxToken(data.mapboxAccessToken);
+          }
+        })
+        .catch((err) => console.error('Failed to fetch config:', err));
     }
   }, []);
 

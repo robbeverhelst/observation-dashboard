@@ -207,7 +207,7 @@ jobs:
           GHCR_USERNAME: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Observation API OAuth credentials
-          OAUTH_GRANT_TYPE: ${{ secrets.OAUTH_GRANT_TYPE }}
+          OAUTH_GRANT_TYPE: password
           OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
           OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
           OAUTH_USERNAME: ${{ secrets.OAUTH_USERNAME }}

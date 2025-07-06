@@ -100,7 +100,7 @@ export class RedisResource {
     );
 
     // Get the service name from the Helm chart
-    this.serviceName = interpolate`${name}-redis-master`;
+    this.serviceName = interpolate`${name}-master`;
     this.serviceUrl = interpolate`redis://${this.serviceName}.${namespace}.svc.cluster.local:6379`;
   }
 }

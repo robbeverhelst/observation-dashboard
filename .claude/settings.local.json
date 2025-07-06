@@ -13,7 +13,9 @@
       "Bash(bun ci:*)",
       "Bash(mv:*)",
       "Bash(helm show values:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(export KUBECONFIG=~/homelab/admin.conf)",
+      "Bash(kubectl get svc:*)"
     ],
     "deny": []
   }
