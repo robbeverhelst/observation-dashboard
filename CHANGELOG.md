@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/robbeverhelst/observation-explorer/compare/v1.5.0...v1.5.1) (2025-07-06)
+
+
+### Bug Fixes
+
+* remove unused import and update CI script to include infrastructure build ([2577f1e](https://github.com/robbeverhelst/observation-explorer/commit/2577f1e3f276e88cd4907ba487aaea2ad0d8b4d5))
+
 # [1.5.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.4.1...v1.5.0) (2025-07-06)
 
 
