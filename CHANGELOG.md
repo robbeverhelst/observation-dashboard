@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/robbeverhelst/observation-explorer/compare/v1.5.1...v1.6.0) (2025-07-06)
+
+
+### Features
+
+* increase Redis persistence size to 10Gi and add storage class ([eb5657e](https://github.com/robbeverhelst/observation-explorer/commit/eb5657e89dca0b1ee2e671dbdf22c33b9be8cba2))
+
 ## [1.5.1](https://github.com/robbeverhelst/observation-explorer/compare/v1.5.0...v1.5.1) (2025-07-06)
 
 
