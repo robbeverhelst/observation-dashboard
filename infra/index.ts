@@ -46,43 +46,26 @@ const ns = new Namespace(
 
 // Get GitHub credentials: Prefer GHA environment variables, fallback to Pulumi config
 const githubUsername =
-  process.env.GHCR_USERNAME || config.require('githubUsername');
-const githubTokenInput =
-  process.env.GHCR_TOKEN || config.requireSecret('githubToken');
-const githubToken = output(githubTokenInput);
+  process.env.GHCR_USERNAME || config.get('githubUsername') || '';
+// const githubTokenInput =
+//   process.env.GHCR_TOKEN || config.getSecret('githubToken') || '';
+// const githubToken = output(githubTokenInput);
 
-// Validate GitHub credentials
-if (!githubUsername || githubUsername.trim() === '') {
-  throw new Error(
-    "GitHub username for GHCR is required (from GHCR_USERNAME env or Pulumi config 'githubUsername')."
-  );
-}
-
-githubToken.apply((token) => {
-  if (!token || token.trim() === '') {
-    throw new Error(
-      "GitHub token for GHCR is required (from GHCR_TOKEN env or Pulumi config 'githubToken')."
+// Log GitHub credentials status (optional for local development)
+if (githubUsername) {
+  console.log(`Using GitHub username for GHCR: ${githubUsername}`);
+  if (process.env.GHCR_TOKEN) {
+    console.log(
+      'Using GHCR_TOKEN from GitHub Actions environment for GHCR authentication.'
+    );
+  } else {
+    console.log(
+      "Using 'githubToken' from Pulumi config for GHCR authentication (if set)."
     );
   }
-  // Basic check for PAT format if not using GITHUB_TOKEN (which has a different format)
-  if (
-    !process.env.GHCR_TOKEN &&
-    (!token.startsWith('ghp_') || token.length < 40)
-  ) {
-    console.warn(
-      `Warning: Configured 'githubToken' (from Pulumi config) does not look like a standard GitHub PAT (ghp_...). Please verify it's correct. Length: ${token.length}`
-    );
-  }
-});
-
-console.log(`Using GitHub username for GHCR: ${githubUsername}`);
-if (process.env.GHCR_TOKEN) {
-  console.log(
-    'Using GHCR_TOKEN from GitHub Actions environment for GHCR authentication.'
-  );
 } else {
   console.log(
-    "GHCR_TOKEN not found in environment, using 'githubToken' from Pulumi config for GHCR authentication (secret will not be displayed)."
+    'No GitHub credentials configured. Docker registry secret will not be created.'
   );
 }
 

@@ -1,5 +1,4 @@
 import { Chart } from '@pulumi/kubernetes/helm/v3';
-import { Service } from '@pulumi/kubernetes/core/v1';
 import { interpolate, Output } from '@pulumi/pulumi';
 import { Provider } from '@pulumi/kubernetes';
 import { Resource } from '@pulumi/pulumi';
@@ -29,7 +28,6 @@ export interface RedisResourceConfig {
 
 export class RedisResource {
   public chart: Chart;
-  public service: Service;
   public serviceName: Output<string>;
   public serviceUrl: Output<string>;
 
@@ -100,13 +98,7 @@ export class RedisResource {
       }
     );
 
-    // Get the Redis service
-    this.service = Service.get(
-      `${name}-service`,
-      interpolate`${namespace}/${name}-redis-master`,
-      { provider }
-    );
-
+    // Get the service name from the Helm chart
     this.serviceName = interpolate`${name}-redis-master`;
     this.serviceUrl = interpolate`redis://${this.serviceName}.${namespace}.svc.cluster.local:6379`;
   }
