@@ -1,0 +1,18 @@
+# Dependencies
+node_modules
+.next
+.turbo
+
+# Build outputs
+build
+dist
+out
+
+# Generated files
+CHANGELOG.md
+
+# Lock files
+bun.lockb
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
