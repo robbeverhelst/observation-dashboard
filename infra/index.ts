@@ -97,7 +97,7 @@ const redis = new RedisResource('redis', {
 // Create web application environment variables
 const webEnv = [
   {
-    name: 'NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN',
+    name: 'MAPBOX_ACCESS_TOKEN',
     value: process.env.MAPBOX_ACCESS_TOKEN || '',
   },
   {
